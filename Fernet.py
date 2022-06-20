@@ -70,7 +70,7 @@ def encryption(fileToCrypt):
     #print(encrypted)
 
     with open('crypted.txt','w') as file :
-        file.writelines(encrypted.decode('utf-8').capitalize())
+        file.writelines(encrypted.decode('utf-8'))
 
     print(f"\n     [+] File {options.file} successfully encoded : crypted.txt\n")
 
@@ -83,10 +83,10 @@ def decryption(fileToDecrypt):
     fernet = key() # Use the key
 
     with open(fileToDecrypt, 'rb') as file:
-        msg = file.read() # Open the file to encrypt
+        msg = file.read() # Open the file to decrypt
 
-    encrypted = fernet.decrypt(msg)  # and encrypt it
-    #print(encrypted)
+    decrypted = fernet.decrypt(msg)  # and decrypt it
+    #print(decrypted)
 
     with open('decrypted.txt','w') as file :
         file.writelines(encrypted.decode('utf-8').capitalize())
