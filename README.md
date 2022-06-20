@@ -6,7 +6,6 @@ All the hacking tools I coded
 
 
 ## Cryptography
-**
 - ```Fernet.py``` : Permit to encrypt and decrypt a file entered in parameter with a filekey. This use the *__symetric encryption__* algorithm of Fernet.
             **__USAGE__** : ```python3 Fernet.py {-c/-d} -F [filename]```
             
