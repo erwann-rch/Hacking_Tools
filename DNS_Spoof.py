@@ -11,6 +11,7 @@ def getArgs():
     # Options of this program
     parser.add_argument("-U", "-u", "--url", dest="url", help="URL address to spoof", type=str)
     parser.add_argument("-S","-s", "--spoof", dest="spoof", help="IP address to replace the orignal one", type=str)
+    parser.add_argument("-Q","-q", "--queue_num", dest="queue", help="Number of the queue to use", type=int)
     options = parser.parse_args()
     # print(parser.parse_args())
     if not options.url:  # Check if url is empty
@@ -29,6 +30,9 @@ def getArgs():
         except (ipaddress.AddressValueError, ipaddress.NetmaskValueError):
             parser.error("\n[-] Please specify a valid IP(v4) for spoofing, use --help for more info.")
 
+    if not options.queue:  # Check if queue number is empty
+        parser.error("\n[-] Please specify a queue number to use, use --help for more info.")
+        
     return options
 
 # --------------------------------------------------
