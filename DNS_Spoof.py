@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ############################# [ IMPORTS ] #############################
 
-import netfilterqueue, subprocess, ipaddress
+import netfilterqueue, subprocess, ipaddress, os
 from scapy.all import *
 
 ############################# [ FUNCTIONS ] #############################
@@ -54,23 +54,35 @@ def handlePacket(packet):
 
 
 ############################# [ LAUNCH ] #############################
+
+# /!\ NEED to be run with ARP_Spoof.py and in root
+
 options = getArgs()
 
 queue = netfilterqueue.NetfilterQueue()
-queue.bind(0, handlePacket)
+queue.bind(options.queue, handlePacket)
 
 try:
-    subprocess.run("sudo iptables -I OUTPUT -j NFQUEUE --queue-num 0", shell=True)
-    subprocess.run("sudo iptables -I INPUT -j NFQUEUE --queue-num 0", shell=True)
-    subprocess.run("sudo iptables -I FORWARD -j NFQUEUE --queue-num 0", shell=True)
-    while True:
-        queue.run()
+    #Check if user is root
+    if not os.geteuid()==0:
+        print('\n[-] This script must be run as root!')
+        exit(1)
+    else:
+        subprocess.run(f"sudo iptables -I INPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
+        subprocess.run(f"sudo iptables -I OUTPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
+        subprocess.run(f"sudo iptables -I FORWARD -j NFQUEUE --queue-num {options.queue}", shell=True)  # MITM 
+        while True:
+            queue.run()
 except KeyboardInterrupt:
     print("\n[-] Exiting program ... ")
-    subprocess.run("sudo iptables -D OUTPUT -j NFQUEUE --queue-num 0", shell=True)
-    subprocess.run("sudo iptables -D INPUT -j NFQUEUE --queue-num 0", shell=True)
-    subprocess.run("sudo iptables -D FORWARD -j NFQUEUE --queue-num 0", shell=True)
+    subprocess.run(f"sudo iptables -D INPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
+    subprocess.run(f"sudo iptables -D OUTPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
+    subprocess.run(f"sudo iptables -D FORWARD -j NFQUEUE --queue-num {options.queue}", shell=True)
 except Exception as e:
+    print("\n[-] Error during the running ... ")
+    subprocess.run(f"sudo iptables -D INPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
+    subprocess.run(f"sudo iptables -D OUTPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
+    subprocess.run(f"sudo iptables -D FORWARD -j NFQUEUE --queue-num {options.queue}", shell=True)
     print(f"\n[-] {e}")
     exit(1)
     #time.sleep(0.052)
