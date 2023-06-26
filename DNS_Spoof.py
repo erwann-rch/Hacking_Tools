@@ -38,7 +38,7 @@ def getArgs():
 # --------------------------------------------------
 # Funtion to handle packet in the NFQUEUE
 def handlePacket(packet):
-    pkt = IP(packet.get_payload())  # Get IP layer from payload
+    pkt = IP(packet.get_payload())  # Convert the packet to a scapy packet.
     if pkt.haslayer(DNSRR):  # Intercept packet only if it contains DNS Response
         qname = pkt[DNSQR].qname
         if options.url in str(qname):
