@@ -39,7 +39,7 @@ def getArgs():
 # --------------------------------------------------
 # Funtion to handle packet in the NFQUEUE
 def handlePacket(packet):
-    pkt = IP(packet.get_payload())  # Get IP layer from payload
+    pkt = IP(packet.get_payload())  # Convert the packet to a scapy packet.
     if pkt.haslayer(Raw):  # Intercept only packet with HTTP layer with useful data
         try:
             if pkt[TCP].dport == 80:
@@ -78,21 +78,21 @@ try:
     if not os.geteuid()==0:
         print('\n[-] This script must be run as root!')
         exit(1)
-    else:
-        subprocess.run(f"sudo iptables -I INPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
-        subprocess.run(f"sudo iptables -I OUTPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
+     else:
+        # subprocess.run(f"sudo iptables -I INPUT -j NFQUEUE --queue-num {options.queue}", shell=True)  # Current machine
+        # subprocess.run(f"sudo iptables -I OUTPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
         subprocess.run(f"sudo iptables -I FORWARD -j NFQUEUE --queue-num {options.queue}", shell=True)  # MITM 
         while True:
             queue.run()
 except KeyboardInterrupt:
     print("\n[-] Exiting program ... ")
-    subprocess.run(f"sudo iptables -D INPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
-    subprocess.run(f"sudo iptables -D OUTPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
+    # subprocess.run(f"sudo iptables -D INPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
+    # subprocess.run(f"sudo iptables -D OUTPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
     subprocess.run(f"sudo iptables -D FORWARD -j NFQUEUE --queue-num {options.queue}", shell=True)
 except Exception as e:
     print("\n[-] Error during the running ... ")
-    subprocess.run(f"sudo iptables -D INPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
-    subprocess.run(f"sudo iptables -D OUTPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
+    # subprocess.run(f"sudo iptables -D INPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
+    # subprocess.run(f"sudo iptables -D OUTPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
     subprocess.run(f"sudo iptables -D FORWARD -j NFQUEUE --queue-num {options.queue}", shell=True)
     print(f"\n[-] {e}")
     exit(1)
