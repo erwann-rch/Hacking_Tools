@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ############################# [ IMPORTS ] #############################
 
-import netfilterqueue, re, os, argparse
+import netfilterqueue, re, os, argparse, subprocess
 from scapy.all import *
 
 ############################# [ VARIABLES ] #############################
