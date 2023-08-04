@@ -1,0 +1,7 @@
+cffi==1.15.1
+cryptography==41.0.3
+NetfilterQueue @ git+https://github.com/kti/python-netfilterqueue@542159a6312726ed49c7cf3639c578d96fc0d1fd
+netifaces==0.11.0
+pycparser==2.21
+scapy==2.5.0
+tabulate==0.9.0
