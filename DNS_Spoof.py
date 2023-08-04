@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ############################# [ IMPORTS ] #############################
 
-import netfilterqueue, subprocess, ipaddress, os
+import netfilterqueue, subprocess, ipaddress, os, argparse
 from scapy.all import *
 
 ############################# [ FUNCTIONS ] #############################
