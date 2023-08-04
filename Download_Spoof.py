@@ -78,7 +78,7 @@ try:
     if not os.geteuid()==0:
         print('\n[-] This script must be run as root!')
         exit(1)
-     else:
+    else:
         subprocess.run(f"sudo iptables -I FORWARD -j NFQUEUE --queue-num {options.queue}", shell=True)  # MITM 
         # subprocess.run(f"sudo iptables -I INPUT -j NFQUEUE --queue-num {options.queue}", shell=True)  # Current machine
         # subprocess.run(f"sudo iptables -I OUTPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
