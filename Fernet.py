@@ -14,7 +14,7 @@ def getArgs():
     parser.add_argument("-c", "--crypt",action='store_true',dest="crypt", help="Use this to crypt a file")
     parser.add_argument("-d", "--decrypt",action='store_true', dest="decrypt", help="Use this to decrypt a file")
     parser.add_argument("-F", "--file", dest="file", help="Enter the file name you want to act onto", type=str)
-    options,args = parser.parse_args()
+    options = parser.parse_args()
     if options.file is not None:  # Check if file option is empty
         if os.path.isfile(options.file): 
             if options.crypt is None and options.decrypt is None:  # Check if the action to execute is empty
