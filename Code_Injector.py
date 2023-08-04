@@ -38,12 +38,13 @@ def handlePacket(packet):
     if pkt.haslayer(Raw):  # Intercept only packet with HTTP layer with useful data
         try:
             payload = pkt[Raw].load.decode()
-            if pkt[TCP].dport == 80:
+            if pkt[TCP].dport == 80:  # Replace by 8080 in HTTPS (for bettercap proxy)
                 print("[+] Request")
                 print("=======================================================================================================")
                 payload = re.sub("Accept-Encoding:.*?\\r\\n", "", payload)  # Erase "Accept-Encoding" to get plain HTML in response
+                pyaload = payload.replace("HTTP/1.1","HTTP/1.0")  # Avoid trunking response to be able to recalculate page lenght
 
-            elif pkt[TCP].sport == 80:
+            elif pkt[TCP].sport == 80:  # Replace by 8080 in HTTPS (for bettercap proxy)
                 print("[+] Response")
                 print("=======================================================================================================")
                 
