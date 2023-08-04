@@ -68,6 +68,12 @@ def handlePacket(packet):
 
 # /!\ NEED to be run with ARP_Spoof.py and in root
 
+# -------------------
+# apt install python3-pip git libnfnetlink-dev libnetfilter-queue-dev
+# pip3 install -U git+https://github.com/kti/python-netfilterqueue
+# -------------------
+
+
 options = getArgs()
 
 queue = netfilterqueue.NetfilterQueue()
