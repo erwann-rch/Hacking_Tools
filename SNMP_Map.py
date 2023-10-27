@@ -118,6 +118,8 @@ def main(options):
                     for line in lines :
                         if ":" in line:  
                             routingTable[routingTableKey].append(line.split(":")[1].strip())  # Get the value of the OID checked and append it to the list
+                        else:
+                            routingTable[routingTableKey].append("")
         # else :
         #     pass
 
@@ -135,7 +137,3 @@ options = getArgs()  # Get the args
 # time.sleep(0.045)
 
 print(tablePrint(options))
-
-
-
-
